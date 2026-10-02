@@ -59,24 +59,25 @@
 
 ### `search_listings`
 
-- **What it does:**
+- **What it does:** Searches the listings for clothes items that match the user's provided description, size (optional), and price (optional). Size labels with letters can match with each other by matching letters; for pants waist sizes, <= W28 match to S, W29 matches to S/M, W30 matches to M, and >= W31 matches to L.
 - **Inputs:** <!-- name and type each: `max_price` (float), not "a price" -->
-- **Returns:**
-- **When it has nothing:**
+`description` (string), `size` (string, optional), `max_price` (float)
+- **Returns:** A list of the matching clothes listing dicts.
+- **When it has nothing:** If there are no matching clothes listings, returns an empty list.
 
 ### `suggest_outfit`
 
-- **What it does:**
-- **Inputs:**
-- **Returns:**
-- **When it has nothing:**
+- **What it does:** Takes an item listing and generates up to two full outfits using the item along with clothes items in the user's wardrobe.
+- **Inputs:** `new_item` (dict), `wardrobe` (dict) 
+- **Returns:** A string suggesting up to two outfits.
+- **When it has nothing:** If `wardrobe` is empty, returns a string with general styling advice based on `new_item`.
 
 ### `create_fit_card`
 
-- **What it does:**
-- **Inputs:**
-- **Returns:**
-- **When it has nothing:**
+- **What it does:** Generates a caption someone would write for a post about a new item and its potential outfit.
+- **Inputs:** `outfit` (string), `new_item` (dict)
+- **Returns:** A string caption of 2-4 sentences.
+- **When it has nothing:** If `outfit` is empty, returns a message describing only `new_item` instead.
 
 ---
 
@@ -93,13 +94,13 @@
      The grader checks your code against what you claim here, so the file and
      function have to be real. -->
 
-**Branch rule:**
+**Branch rule:** If search_listings returns an empty list, put a message in session["error"] naming what the user could change, and return the session without calling suggest_outfit. Otherwise take the first result, put it in session["selected_item"], and continue.
 
 **Where it lives:** `agent.py::run_agent`
 
-**How the query is parsed:** <!-- regex, string splitting, or asking the model — say which -->
+**How the query is parsed:** Regex
 
-**What moves through the session:** <!-- which fields, in what order -->
+**What moves through the session:** `"query"`, `"parsed"`, `"search_results"`, `"selected_item"`, `"wardrobe"`, `"outfit_suggestion"`, `"fit_card"`, `"error"`
 
 ---
 
