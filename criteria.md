@@ -22,9 +22,10 @@ data earns credit; *"80% seemed reasonable"* does not.
 ## 1. A matching query completes all three tools
 
 Given a query that matches at least one listing, the agent completes all three
-tool calls and returns a fit card — in at least 4 of 5 tries.
+tool calls and returns a fit card — in ALL 5 tries.
 
 **Why this target:**
+For all the valid test queries in app.py, all of the query's keywords are found in at least one listing. With a simple keyword search, the search tool should be able to find an obvious match for each test query, and pass this listing to the next tools to no further issues.
 <!-- Why 4 of 5 and not 5 of 5? Something about your search, probably —
      "my search is a plain keyword match and some phrasings will miss" is a
      real answer. -->
@@ -37,12 +38,15 @@ Given a query that matches no listings, the agent stops before calling
 `suggest_outfit` and returns a message naming what to change — 5 of 5 tries.
 
 **Why this target:**
+The agent will have a hard-coded branch that stops and prints a message if the listing search came back empty. This way, the system will never waste operation time or model calls if there's no listing to operate on.
 <!-- Why is 5 of 5 reasonable here when criterion 1 isn't? What's different
      about this path? -->
 
 ---
 
-## 3. Something about state
+## 3. The trace report shows state passing through stages
+
+In the trace report, the top listing result of `search_listings` is seen verbatim in the output of `select_item` and in the input of `suggest_outfit` and `create_fit_card` — 5 of 5 matching queries.
 
 <!-- YOU WRITE THIS ONE.
 
@@ -57,12 +61,14 @@ Given a query that matches no listings, the agent stops before calling
 
 
 **Why this target:**
-
+The trace report prints the state of the session, including the selected item, which is passed unmodified through each stage. This is how the state should behave through all valid runs.
 
 
 ---
 
-## 4. Something about the fit card
+## 4. Fit card mentions other items in outfit
+
+The outfit card mentions all of the added items from the user’s wardrobe. — 3 of 5 matching queries.
 
 <!-- YOU WRITE THIS ONE.
 
@@ -78,12 +84,14 @@ Given a query that matches no listings, the agent stops before calling
 
 
 **Why this target:**
-
+The system will look at all the outfit items, not just the new item, when generating its card caption. This means that while the new item should be guaranteed to be mentioned in the card, the other items have a reasonable expectation to be mentioned as well. However, the prompt does not specify to explicitly mention any of the other outfit items, which is why they're expected to be mentioned in about half the queries.
 
 
 ---
 
-## 5. Your choice
+## 5. All items match
+
+Every item in an outfit has at least one word in the description or style tags that matches with another item in the same outfit. — 4 of 5 matching queries.
 
 <!-- YOU WRITE THIS ONE TOO.
 
@@ -95,7 +103,7 @@ Given a query that matches no listings, the agent stops before calling
 
 
 **Why this target:**
-
+The system should not group an item into an outfit with which it has no matching keywords. Only 4 of 5 queries because the grouping is done through an LLM, which may make mistakes.
 
 
 ---
