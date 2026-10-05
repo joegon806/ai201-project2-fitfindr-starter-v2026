@@ -41,7 +41,7 @@
 
 <!-- Three or four sentences: what a user asks for, and what they get back. -->
 
-
+FitFindr is a tool that lets you thrift for clothes items and form outfit posts with them. To use, enter `python app.py ask '<item>'`, replacing `item` with a description of a clothes item you want. FitFindr searches through thrift listings for the best item that matches what you want, and then generates an outfit using the item and other clothes items from your own wardrobe. Finally, FitFindr prints out a caption you can use to write a post about the new item and your new outfit. 
 
 ---
 
@@ -192,15 +192,15 @@ Scored these classic vintage Levi's 501 jeans on Depop for just $38, and they ho
 
 **Moment 1**
 
-- *What I asked for:*
-- *What came back:*
-- *What I changed:*
+- *What I asked for:* I asked Claude for ideas for the state criterion.
+- *What came back:* Four ideas: Option A was about the state passing through stages, Option B was about state appearing in the final output, Option C was about state not leaking between runs, and Option D was about state being None on an empty search result.
+- *What I changed:* I used and modified Option A, because it's the most crucial criterion to maintain for the system, and is straightforward to test.
 
 **Moment 2**
 
-- *What I asked for:*
-- *What came back:*
-- *What I changed:*
+- *What I asked for:* I asked Claude to review my code for the three tools.
+- *What came back:* Claude commended my code's structure, but caught a few bugs, typos, and other oversights.
+- *What I changed:* I reviewed and implemented the suggested fixes if they were appropriate for the functionality outlined in the docstrings.
 
 <!-- ═══════════════════════ UNIT 4 — THE TEST ═══════════════════════
 
