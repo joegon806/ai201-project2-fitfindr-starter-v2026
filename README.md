@@ -284,13 +284,59 @@ that produced it:
 **Happy path**
 
 ```
+[1] parse_query
+      in:  vintage graphic tee
+      out: dict with keys: description, size, max_price
+[2] search_listings (via MCP)
+      in:  dict with keys: description, size, max_price
+      out: 10 items: Y2K Baby Tee — Butterfly Print, Graphic Tee — 2003 Tour Bootleg Style, Vintage Band Tee — Faded Grey … +7 more
+      →    10 match(es)
+[3] select_item
+      out: Y2K Baby Tee — Butterfly Print ($18.0, depop)
+[4] suggest_outfit
+      in:  Y2K Baby Tee — Butterfly Print ($18.0, depop)
+      out: Outfit 1: - Top: Y2K Baby Tee — Butterfly Print - Bottom: Baggy straight-leg jeans, dark wash - Shoes: Chunky …
+      →    10 wardrobe item(s)
+[5] create_fit_card
+      in:  Y2K Baby Tee — Butterfly Print ($18.0, depop)
+      out: Score! Finally tracked down this super cute Y2K butterfly baby tee on Depop for just $18, and the pastel pink …
 
+  Found:    Y2K Baby Tee — Butterfly Print — $18.0 on depop
+
+  Outfit:   Outfit 1:
+- Top: Y2K Baby Tee — Butterfly Print
+- Bottom: Baggy straight-leg jeans, dark wash
+- Shoes: Chunky white sneakers
+- Accessories: Black crossbody bag
+
+Outfit 2:
+- Top: Y2K Baby Tee — Butterfly Print
+- Bottom: Wide-leg khaki trousers
+- Shoes: Chunky white sneakers
+- Outerwear: Vintage black denim jacket
+
+  Fit card: Score! Finally tracked down this super cute Y2K butterfly baby tee on Depop for just $18, and the pastel pink and purple print is giving major early 2000s nostalgia. I'm totally planning to style it with dark wash baggy jeans and chunky white sneakers for an effortless off-duty look, or dress it down a bit with some wide-leg khaki trousers and a vintage black denim jacket.
+
+0 model calls this session, 2 served from cache
 ```
 
 **Empty search**
 
 ```
+[1] parse_query
+      in:  empty search
+      out: dict with keys: description, size, max_price
+[2] search_listings (via MCP)
+      in:  dict with keys: description, size, max_price
+      out: [] (empty)
+      →    0 match(es)
+[3] branch
+      →    search returned []: stopping before suggest_outfit
 
+  Nothing in the listings matched description 'empty search'.
+Things to change: try broader words — 'jacket' finds more than 'cropped corduroy jacket'.
+
+0 model calls this session
 ```
 
 **On the MCP move:** <!-- what changed in your code, and whether anything
