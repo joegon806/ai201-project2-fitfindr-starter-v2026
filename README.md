@@ -222,17 +222,114 @@ Scored these classic vintage Levi's 501 jeans on Depop for just $38, and they ho
 
 | Criterion | Target | Try 1 | Try 2 | Try 3 | Try 4 | Try 5 | Verdict |
 |---|---|---|---|---|---|---|---|
-| 1.  |  |  |  |  |  |  |  |
-| 2.  |  |  |  |  |  |  |  |
-| 3.  |  |  |  |  |  |  |  |
-| 4.  |  |  |  |  |  |  |  |
-| 5.  |  |  |  |  |  |  |  |
+| 1. matching query completes | 5 of 5 | PASS | PASS | PASS | PASS | PASS | MET (5/5) |
+| 2. impossible query stops early | 5 of 5 | PASS | PASS | PASS | PASS | PASS | MET (5/5) |
+| 3. trace report shows passing state | 5 of 5 | PASS | PASS | PASS | PASS | PASS | MET (5/5) |
+| 4. fit card mentions other items in outfit | 3 of 5 | PASS | PASS | PASS | PASS | PASS | MET (5/5) |
+| 5. all items match | 4 of 5 | FAIL | FAIL | FAIL | FAIL | FAIL | MISSED (0/5) |
 
 **Real output from one try**, pasted as text, naming the file and function
 that produced it:
 
+### matching query completes
+File: ```agent.py```, Function: ```run_agent```
+```
+Query: vintage graphic tee under $30
+Wardrobe: example
+
+Try 1
+stopped early: no
+selected_item: Y2K Baby Tee — Butterfly Print ($18.0, depop)
+search_results: 10
+Outfit suggestion:
+
+Outfit 1:
+- Top: Y2K Baby Tee — Butterfly Print
+- Bottom: Baggy straight-leg jeans, dark wash
+- Shoes: Chunky white sneakers
+- Outerwear: Vintage black denim jacket
+- Accessories: Black crossbody bag
+
+Outfit 2:
+- Top: Y2K Baby Tee — Butterfly Print
+- Bottom: Wide-leg khaki trousers
+- Shoes: Black combat boots
+- Accessories: Brown leather belt
+
+Fit card:
+
+Scored this adorable Y2K butterfly baby tee on Depop for just $18 and I am obsessed with the nostalgic pastel print! It gives off the ultimate early 2000s indie-sleaze vibe, and I can't wait to style it either casually with dark-wash baggy jeans and chunky sneakers or edge it up with wide-leg trousers and combat boots.
 ```
 
+### impossible query stops early
+File: ```agent.py```, Function: ```_nothing_found_message```
+```
+Query: designer ballgown size XXS under $5
+Wardrobe: example
+
+Try 1
+stopped early: yes — Nothing in the listings matched description 'designer ballgown', size XXS, under $5. Things to change: try broader words — 'jacket' finds more than 'cropped corduroy jacket'; drop the size, or try a neighbouring one; raise the price ceiling above $5.
+selected_item: (none)
+search_results: 0
+```
+
+### trace report shows passing state
+File: ```trace.py```, Function: ```step```
+```
+Query: vintage graphic tee under $30
+Wardrobe: example
+
+Try 1
+...
+Trace:
+
+[1] parse_query
+      in:  vintage graphic tee under $30
+      out: dict with keys: description, size, max_price
+[2] search_listings (via MCP)
+      in:  dict with keys: description, size, max_price
+      out: 10 items: Y2K Baby Tee — Butterfly Print, Graphic Tee — 2003 Tour Bootleg Style, Vintage Band Tee — Faded Grey … +7 more
+      →    10 match(es)
+[3] select_item
+      out: Y2K Baby Tee — Butterfly Print ($18.0, depop)
+[4] suggest_outfit
+      in:  Y2K Baby Tee — Butterfly Print ($18.0, depop)
+      out: Outfit 1: - Top: Y2K Baby Tee — Butterfly Print - Bottom: Baggy straight-leg jeans, dark wash - Shoes: Chunky …
+      →    10 wardrobe item(s)
+[5] create_fit_card
+      in:  Y2K Baby Tee — Butterfly Print ($18.0, depop)
+      out: Scored the ultimate early 2000s butterfly baby tee on Depop for just $18, and it’s giving major nostalgia! I'm…
+```
+
+### fit card mentions other items in outfit
+File: ```tools.py```, Function: ```create_fit_card```
+```
+Query: vintage graphic tee under $30
+Wardrobe: example
+
+Try 1
+...
+Fit card:
+
+Found this absolute dream of a Y2K butterfly baby tee on Depop for just $18, and it’s giving major early 2000s mall-rat energy. I’m already planning to style it two ways: either keep it classic with baggy dark-wash denim and chunky kicks, or toughen it up with wide-leg khakis, combat boots, and a black denim jacket. Such a steal for the collection!
+```
+
+### all items match
+File: ```tools.py```, Function: ```suggest_outfit```
+```
+Query: vintage graphic tee under $30
+Wardrobe: example
+
+Try 1
+...
+Outfit suggestion:
+
+Outfit 1:
+- Top: Y2K Baby Tee — Butterfly Print
+- Bottom: Baggy straight-leg jeans, dark wash
+- Shoes: Chunky white sneakers
+- Accessories: Black crossbody bag
+...
 ```
 
 ---
@@ -257,15 +354,21 @@ that produced it:
 
 | # | Criterion | Target | Verdict | How I decided |
 |---|---|---|---|---|
-| 1 |  |  |  |  |
-| 2 |  |  |  |  |
-| 3 |  |  |  |  |
-| 4 |  |  |  |  |
-| 5 |  |  |  |  |
+| 1 | matching query completes | 5 of 5 | MET | The system had no problem going through all steps of a run for the matching query, on all 5 tries. |
+| 2 | impossible query stops early | 5 of 5 | MET | For all 5 tries, the system stopped the run early, citing that no items in the listings matched the impossible query. |
+| 3 | trace report shows passing state | 5 of 5 | MET | For all 5 tries, The trace report successfully prints out the item listing and the output at each stage, showing the same item listing passing through each stage of the system. |
+| 4 | fit card mentions other items in outfit | 3 of 5 | MET | All 5 outfit cards mention items in the outfit other than the thrifted item, and it doesn't force itself to say all of the items. Strangely, the caption never mentions Accessories at all. |
+| 5 | all items match | 4 of 5 | MISSED | In all 5 tries, many of the clothes have no matching keywords with the other outfit items. |
 
 **Diagnoses**
 
+Criterion 5 MISSED: Every item in an outfit has at least one word in the description or style tags that matches with another item in the same outfit.
+Although 2 of the outfits from the trial runs do meet this criterion with every item matching another item by some keyword, many of the outfit items do not match any other items. The tool that creates outfits, `suggest_outfit` in `tools.py`, does not specify in its prompt to match items by keyword. Its only guidance for matching items is to `"Take in consideration the items' styles and colors, when forming an outfit"`; otherwise, it's complete up to the judgement of the LLM to match the items in a fitting way to make the outfit.
+The tool works as directed; rather, this criterion was written with an unfounded expectation in mind that the tool would naturally match items closely by their keywords.
 
+ORIGINAL: Every item in an outfit has at least one word in the description or style tags that matches with another item in the same outfit.
+REVISED: In every outfit, there are at least two items that match at least one word with each other in the description or style tags.
+WHY: This new crtierion allows the system the freedom to be subjective in matching items, while the requirement of two matching items maintains that the system must have some sort of logic to the matching. I also plan on adding this criterion directly into the prompt for generating an outfit so that the LLM can meet the criterion directly.
 
 ---
 
