@@ -202,6 +202,20 @@ Scored these classic vintage Levi's 501 jeans on Depop for just $38, and they ho
 - *What came back:* Claude commended my code's structure, but caught a few bugs, typos, and other oversights.
 - *What I changed:* I reviewed and implemented the suggested fixes if they were appropriate for the functionality outlined in the docstrings.
 
+***Further Moments in Unit 4***
+
+**Moment 3**
+
+- *What I asked for:* I asked Claude for an explanation for why the system can still call the model if the api key is changed or removed outright.
+- *What came back:* Claude gave a few possible explanations, the most relevant of which was that the `_client` is created once per process and keeps the key it first uses until the `_client` restarts.
+- *What I changed:* When I changed my API key to test the "Model unavailable" handler, I closed and reopened my terminal and folder before running the system again.
+
+**Moment 4**
+
+- *What I asked for:* I asked Claude why every trial run returns the same Outfit 1.
+- *What came back:* Claude informed me that there are only 2 tops and 2 bottoms in the wardrobe, which means there are 4 possible combinations of outfits not including accessories and outerwear, and the outfit it returns as Outfit 1 does in fact have the best-matched items in the wardrobe based on the new thrifting item given.
+- *What I changed:* I conceded that changing the algorithm can't make the model return different outfits between runs, and that the best solution would be to add more clothing items to the wardrobe to facilitate more outfit combinations. 
+
 <!-- ═══════════════════════ UNIT 4 — THE TEST ═══════════════════════
 
      Don't fill these in during unit 3.
@@ -445,6 +459,7 @@ Things to change: try broader words — 'jacket' finds more than 'cropped cordur
 behaved differently afterwards. If the rewire didn't work, say exactly where it
 broke — the error text and the last thing that worked. That earns the point in
 full. -->
+The code did not change apart from an added sentence in the prompt to the LLM in the `suggest_outfit` function of `tools.py`. This change made the model more likely to return the same two outfits on every run with little variance.
 
 
 
@@ -489,8 +504,7 @@ While the revised criterion is met following the fix, the revision actually made
      you did. "I ran out of time" is fine if it's true. Pretending nothing is
      left is not. -->
 
-As mentioned in the section above, Criterion 5 was addressed by adding a sentence to the outfit generation prompt to put a focus on matching items by keyword, which followed through in the trial runs. However, the new trial runs introduced a new problem where the model reuses the same exact outfits frequently. I tried changing the temperature to the max amount of 2, but that yielded the same result, with every trial's Outfit 1 being the same.
-
+As mentioned in the section above, Criterion 5 was addressed by adding a sentence to the outfit generation prompt to make sure it doesn't return two identical outfits, which followed through by returning two different outfits each run. However, the new trial runs introduced a new problem where the model reuses the same exact outfits frequently between runs. This is because there are so few clothing items in the wardrobe that only 4 different outfits can be made not including accessories and outerwear, and the items in Outfit 1 fit better with the provided Graphic Tee item than the items left over in Outfit 2. Why the change in the prompt made the model have less variance than before is unknown. The only solution to this issue that I could see is to add more clothing items to the wardrobe so the LLM can form more combinations, which I don't want to modify because it was initially provided and is not instructed to be modified.
 
 
 <!-- ═════════════════════════════════════════════════════════════════════
@@ -519,7 +533,7 @@ As mentioned in the section above, Criterion 5 was addressed by adding a sentenc
        [x] Loop Trace, with the MCP call visible in it
        [x] All three failure modes triggered and handled
        [x] One improvement, with Run Log — After in the same format
-       [ ] What's Still Broken
+       [x] What's Still Broken
        [x] At least four new commits
        [x] The SAME repository URL as last unit
 
