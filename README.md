@@ -415,7 +415,7 @@ WHY: The original criterion placed too heavy of a restriction on the combination
       →    10 wardrobe item(s)
 [5] create_fit_card
       in:  Y2K Baby Tee — Butterfly Print ($18.0, depop)
-      out: Score! Finally tracked down this super cute Y2K butterfly baby tee on Depop for just $18, and the pastel pink …
+      out: Manifesting early 2000s pop-princess energy with this adorable butterfly print baby tee I just scored on Depop…
 
   Found:    Y2K Baby Tee — Butterfly Print — $18.0 on depop
 
@@ -428,12 +428,13 @@ WHY: The original criterion placed too heavy of a restriction on the combination
 Outfit 2:
 - Top: Y2K Baby Tee — Butterfly Print
 - Bottom: Wide-leg khaki trousers
-- Shoes: Chunky white sneakers
+- Shoes: Black combat boots
 - Outerwear: Vintage black denim jacket
+- Accessories: Brown leather belt
 
-  Fit card: Score! Finally tracked down this super cute Y2K butterfly baby tee on Depop for just $18, and the pastel pink and purple print is giving major early 2000s nostalgia. I'm totally planning to style it with dark wash baggy jeans and chunky white sneakers for an effortless off-duty look, or dress it down a bit with some wide-leg khaki trousers and a vintage black denim jacket.
+  Fit card: Manifesting early 2000s pop-princess energy with this adorable butterfly print baby tee I just scored on Depop for only $18! I'm completely obsessed with the fitted crop, and I can't wait to style it with baggy dark-wash jeans and chunky sneakers for a casual day out, or toughen it up with wide-leg trousers and black combat boots. It's giving ultimate nostalgic vintage vibes, and I am here for it!
 
-0 model calls this session, 2 served from cache
+2 model calls this session, 1228 prompt + 190 output tokens
 ```
 
 **Empty search**
