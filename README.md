@@ -366,7 +366,7 @@ Criterion 5 MISSED: Every item in an outfit has at least one word in the descrip
 The tool that creates outfits, `suggest_outfit` in `tools.py`, does not specify in its prompt to match items by keyword. Its only guidance for matching items is to `"Take in consideration the items' styles and colors, when forming an outfit"`. Additionally, the wardrobe has only a small amount of items, with only 1-3 items per category, so the amount of combinations that can be made with one item is very small, with an even smaller chance for any of the items to match with any of the other items.
 
 ORIGINAL: Every item in an outfit has at least one word in the description or style tags that matches with another item in the same outfit.
-REVISED: If a trial run returns two outfits, they don't contain the same exact combination of items.
+REVISED: If a trial run returns two outfits, they don't contain the same exact combination of top, bottom, and shoes.
 WHY: The original criterion placed too heavy of a restriction on the combinations to be made when the number of combination was already small in the first place. The revised criterion maintains that the returned outfits should have different combinations, but doesn't restrict the model further than that.
 
 ---
@@ -457,9 +457,9 @@ full. -->
 
      `python run_eval.py --label after` -->
 
-**What I changed:** I changed the prompt for generating outfits in the `suggest_outfit` function of `tools.py` to directly tell the LLM to make sure at least two items match keywords in every outfit.
+**What I changed:** I changed the prompt for generating outfits in the `suggest_outfit` function of `tools.py` to directly tell the LLM to make sure the it does not return two identical outfits.
 
-**Which failure it was meant to fix:** This was meant to ensure the system has sensible logic for matching some of the items, that being that items are grouped together by similar keywords in the descriptions or style tags.
+**Which failure it was meant to fix:** The criterion itself was the failure, because it put too heavy a restriction on teh kinds of outfits the system could generate, while the system wasn't even prompted with the restriction. The criterion was revised to give a more reasonable, expected restriction of "no identical outfits" while giving the model freedom in how it generates its outfits. The prompt was then changed to implement this criterion into the system directly.
 
 ### Run Log — After
 
@@ -470,11 +470,11 @@ full. -->
 | empty wardrobe _(diagnostic — not one of your five)_ | --- | --- | --- | --- | --- | --- | --- |
 | 3. trace report shows passing state | 5 of 5 | PASS | PASS | PASS | PASS | PASS | MET (5/5) |
 | 4. fit card mentions other items in outfit | 3 of 5 | PASS | PASS | PASS | PASS | PASS | MET (5/5) |
-| 5. at least two items match | 5 of 5 | PASS | PASS | PASS | PASS | PASS | MET (5/5) |
+| 5. different outfits | 5 of 5 | PASS | PASS | PASS | PASS | PASS | MET (5/5) |
 
 **Did it help, and how do I know:**
 
-The fix helped in that all of the outfits met the criterion by having at least two items matching by keyword, which I checked manually. `Y2K Baby Tee — Butterfly Print` matches with `Vintage black denim jacket` through `crop` and `vintage`, `Baggy straight-leg jeans, dark wash` matches with `Chunky white sneakers` through `streetwear`, `Black combat boots` matches with `Vintage black denim jacket` through `classic`, and `Wide-leg khaki trousers` matches with `Brown leather belt` through `earth tones`. The downside, however, is that the system reuses several of the same outfits among trial runs: Trial 2 Outfit 2 is the same as Trial 4 Outfit 2, Trial 3 Outfit 2 is the same as Trial 5 Outfit 2, and- strangest of all- EVERY trial run has the SAME EXACT Outfit 1. I'm not sure why the LLM reuses outfits so often, much less why it reuses Outfit 1 for every trial and not Outfit 2. My only idea is that the model's Temperature is causing the frequent reuse of responses.
+While the revised criterion is met following the fix, the revision actually made the output worse, because the outputs between runs match each other near-identically, much moreso than the "before" trial run. Nearly every Outfit 1 groups the `Y2K Baby Tee — Butterfly Print` with `Baggy straight-leg jeans, dark wash`, `Chunky white sneakers`, and `Black crossbody bag`, and nearly every Outfit 2 groups the tee with `Wide-leg khaki trousers`, `Black combat boots`, and `Brown leather belt`, with a possible `Vintage black denim jacket` added in too. 
 
 <!-- If it made things worse, say that. Honestly reported, that earns full
      credit and is more interesting than one that worked. -->

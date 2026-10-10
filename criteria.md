@@ -105,7 +105,7 @@ Every item in an outfit has at least one word in the description or style tags t
 **Why this target:**
 The system should not group an item into an outfit with which it has no matching keywords. Only 4 of 5 queries because the grouping is done through an LLM, which may make mistakes.
  
-> **Revised in unit 4:** If a trial run returns two outfits, they don't contain the same exact combination of items.
+> **Revised in unit 4:** If a trial run returns two outfits, they don't contain the same exact combination of top, bottom, and shoes.
 >
 > **Why revised:** The original criterion placed too heavy of a restriction on the combinations to be made when the number of combination was already small in the first place. The revised criterion maintains that the returned outfits should have different combinations, but doesn't restrict the model further than that.
 
