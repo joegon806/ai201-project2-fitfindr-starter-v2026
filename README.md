@@ -458,21 +458,24 @@ full. -->
 
      `python run_eval.py --label after` -->
 
-**What I changed:**
+**What I changed:** I changed the prompt for generating outfits in the `suggest_outfit` function of `tools.py` to directly tell the LLM to make sure at least two items match keywords in every outfit.
 
-**Which failure it was meant to fix:**
+**Which failure it was meant to fix:** This was meant to ensure the system has sensible logic for matching some of the items, that being that items are grouped together by similar keywords in the descriptions or style tags.
 
 ### Run Log — After
 
 | Criterion | Target | Try 1 | Try 2 | Try 3 | Try 4 | Try 5 | Verdict |
 |---|---|---|---|---|---|---|---|
-| 1.  |  |  |  |  |  |  |  |
-| 2.  |  |  |  |  |  |  |  |
-| 3.  |  |  |  |  |  |  |  |
-| 4.  |  |  |  |  |  |  |  |
-| 5.  |  |  |  |  |  |  |  |
+| 1. matching query completes | 5 of 5 | PASS | PASS | PASS | PASS | PASS | MET (5/5) |
+| 2. impossible query stops early | 5 of 5 | PASS | PASS | PASS | PASS | PASS | MET (5/5) |
+| empty wardrobe _(diagnostic — not one of your five)_ | --- | --- | --- | --- | --- | --- | --- |
+| 3. trace report shows passing state | 5 of 5 | PASS | PASS | PASS | PASS | PASS | MET (5/5) |
+| 4. fit card mentions other items in outfit | 3 of 5 | PASS | PASS | PASS | PASS | PASS | MET (5/5) |
+| 5. at least two items match | 5 of 5 | PASS | PASS | PASS | PASS | PASS | MET (5/5) |
 
 **Did it help, and how do I know:**
+
+The fix helped in that all of the outfits met the criterion by having at least two items matching by keyword, which I checked manually. `Y2K Baby Tee — Butterfly Print` matches with `Vintage black denim jacket` through `crop` and `vintage`, `Baggy straight-leg jeans, dark wash` matches with `Chunky white sneakers` through `streetwear`, `Black combat boots` matches with `Vintage black denim jacket` through `classic`, and `Wide-leg khaki trousers` matches with `Brown leather belt` through `earth tones`. The downside, however, is that the system reuses several of the same outfits among trial runs: Trial 2 Outfit 2 is the same as Trial 4 Outfit 2, Trial 3 Outfit 2 is the same as Trial 5 Outfit 2, and- strangest of all- EVERY trial run has the SAME EXACT Outfit 1. I'm not sure why the LLM reuses outfits so often, much less why it reuses Outfit 1 for every trial and not Outfit 2. My only idea is that the model's Temperature is causing the frequent reuse of responses.
 
 <!-- If it made things worse, say that. Honestly reported, that earns full
      credit and is more interesting than one that worked. -->

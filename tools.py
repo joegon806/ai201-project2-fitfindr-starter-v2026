@@ -178,6 +178,7 @@ def suggest_outfit(new_item: dict, wardrobe: dict) -> str:
         "Each outfit must use the thrifted item, and the rest of the items come from the user's wardrobe. Refer to the wardrobe items by their exact name. " + \
         "Each outfit must include one top, bottom, and shoes, any of which can be the thrifted item. " + \
         "Take in consideration the items' styles and colors, when forming an outfit. " + \
+        "Make sure that in every outfit, there are at least two items that match at least one word with each other in the description or style tags." + \
         "Accessories and outerwear are optional, unless the thrifted item is an accessory or outerwear, in which case that item is still required regardless. " + \
         "Use only up to one item of outerwear, and/or up to three different accessories." + \
         "Do not give any extra commentary. Just respond with the outfit(s)."

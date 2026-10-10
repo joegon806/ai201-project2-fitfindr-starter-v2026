@@ -89,7 +89,7 @@ The system will look at all the outfit items, not just the new item, when genera
 
 ---
 
-## 5. All items match
+## 5. (Original) All items match
 
 Every item in an outfit has at least one word in the description or style tags that matches with another item in the same outfit. — 4 of 5 matching queries.
 
@@ -104,7 +104,10 @@ Every item in an outfit has at least one word in the description or style tags t
 
 **Why this target:**
 The system should not group an item into an outfit with which it has no matching keywords. Only 4 of 5 queries because the grouping is done through an LLM, which may make mistakes.
-
+ 
+> **Revised in unit 4:** In every outfit, there are at least two items that match at least one word with each other in the description or style tags. — 5 of 5 matching queries.
+>
+> **Why revised:** This new crtierion allows the system the freedom to be subjective in matching items, while the requirement of two matching items maintains that the system must have some sort of logic to the matching. I also plan on adding this criterion directly into the prompt for generating an outfit so that the LLM can meet the criterion directly.
 
 ---
 
