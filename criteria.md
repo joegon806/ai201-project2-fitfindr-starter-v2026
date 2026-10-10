@@ -105,9 +105,9 @@ Every item in an outfit has at least one word in the description or style tags t
 **Why this target:**
 The system should not group an item into an outfit with which it has no matching keywords. Only 4 of 5 queries because the grouping is done through an LLM, which may make mistakes.
  
-> **Revised in unit 4:** In every outfit, there are at least two items that match at least one word with each other in the description or style tags. — 5 of 5 matching queries.
+> **Revised in unit 4:** If a trial run returns two outfits, they don't contain the same exact combination of items.
 >
-> **Why revised:** This new crtierion allows the system the freedom to be subjective in matching items, while the requirement of two matching items maintains that the system must have some sort of logic to the matching. I also plan on adding this criterion directly into the prompt for generating an outfit so that the LLM can meet the criterion directly.
+> **Why revised:** The original criterion placed too heavy of a restriction on the combinations to be made when the number of combination was already small in the first place. The revised criterion maintains that the returned outfits should have different combinations, but doesn't restrict the model further than that.
 
 ---
 

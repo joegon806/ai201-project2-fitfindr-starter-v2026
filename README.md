@@ -363,12 +363,11 @@ Outfit 1:
 **Diagnoses**
 
 Criterion 5 MISSED: Every item in an outfit has at least one word in the description or style tags that matches with another item in the same outfit.
-Although 2 of the outfits from the trial runs do meet this criterion with every item matching another item by some keyword, many of the outfit items do not match any other items. The tool that creates outfits, `suggest_outfit` in `tools.py`, does not specify in its prompt to match items by keyword. Its only guidance for matching items is to `"Take in consideration the items' styles and colors, when forming an outfit"`; otherwise, it's complete up to the judgement of the LLM to match the items in a fitting way to make the outfit.
-The tool works as directed; rather, this criterion was written with an unfounded expectation in mind that the tool would naturally match items closely by their keywords.
+The tool that creates outfits, `suggest_outfit` in `tools.py`, does not specify in its prompt to match items by keyword. Its only guidance for matching items is to `"Take in consideration the items' styles and colors, when forming an outfit"`. Additionally, the wardrobe has only a small amount of items, with only 1-3 items per category, so the amount of combinations that can be made with one item is very small, with an even smaller chance for any of the items to match with any of the other items.
 
 ORIGINAL: Every item in an outfit has at least one word in the description or style tags that matches with another item in the same outfit.
-REVISED: In every outfit, there are at least two items that match at least one word with each other in the description or style tags.
-WHY: This new crtierion allows the system the freedom to be subjective in matching items, while the requirement of two matching items maintains that the system must have some sort of logic to the matching. I also plan on adding this criterion directly into the prompt for generating an outfit so that the LLM can meet the criterion directly.
+REVISED: If a trial run returns two outfits, they don't contain the same exact combination of items.
+WHY: The original criterion placed too heavy of a restriction on the combinations to be made when the number of combination was already small in the first place. The revised criterion maintains that the returned outfits should have different combinations, but doesn't restrict the model further than that.
 
 ---
 
@@ -490,37 +489,39 @@ The fix helped in that all of the outfits met the criterion by having at least t
      you did. "I ran out of time" is fine if it's true. Pretending nothing is
      left is not. -->
 
+As mentioned in the section above, Criterion 5 was addressed by adding a sentence to the outfit generation prompt to put a focus on matching items by keyword, which followed through in the trial runs. However, the new trial runs introduced a new problem where the model reuses the same exact outfits frequently. I tried changing the temperature to the max amount of 2, but that yielded the same result, with every trial's Outfit 1 being the same.
+
 
 
 <!-- ═════════════════════════════════════════════════════════════════════
 
      SUBMISSION CHECKLIST — unit 3
 
-       [ ] criteria.md has five numbered criteria, each with a target
-       [ ] Each criterion has a reason underneath it
-       [ ] All five unit 3 sections above have real content
-       [ ] Tool Inventory: all three tools, inputs WITH TYPES, a specific
+       [x] criteria.md has five numbered criteria, each with a target
+       [x] Each criterion has a reason underneath it
+       [x] All five unit 3 sections above have real content
+       [x] Tool Inventory: all three tools, inputs WITH TYPES, a specific
            return value, and the empty case
-       [ ] Planning Loop names the branch rule and agent.py::run_agent
-       [ ] Sample Run: one full query plus the three per-tool tests, as text
-       [ ] At least four new commits
-       [ ] Repository URL submitted — WRITE IT DOWN, you submit the same one
+       [x] Planning Loop names the branch rule and agent.py::run_agent
+       [x] Sample Run: one full query plus the three per-tool tests, as text
+       [x] At least four new commits
+       [x] Repository URL submitted — WRITE IT DOWN, you submit the same one
            next unit
 
      SUBMISSION CHECKLIST — unit 4
 
-       [ ] mcp_server.py exists with one tool registered
+       [x] mcp_server.py exists with one tool registered
            (or a written record of exactly where the rewire broke)
-       [ ] Run Log — Before, five criteria, five tries each
-       [ ] Real output pasted underneath, naming file and function
-       [ ] A verdict on every criterion
-       [ ] A diagnosis for every miss, naming a place AND a mechanism
-       [ ] Loop Trace, with the MCP call visible in it
-       [ ] All three failure modes triggered and handled
-       [ ] One improvement, with Run Log — After in the same format
+       [x] Run Log — Before, five criteria, five tries each
+       [x] Real output pasted underneath, naming file and function
+       [x] A verdict on every criterion
+       [x] A diagnosis for every miss, naming a place AND a mechanism
+       [x] Loop Trace, with the MCP call visible in it
+       [x] All three failure modes triggered and handled
+       [x] One improvement, with Run Log — After in the same format
        [ ] What's Still Broken
-       [ ] At least four new commits
-       [ ] The SAME repository URL as last unit
+       [x] At least four new commits
+       [x] The SAME repository URL as last unit
 
      Do not delete and recreate this repository. Your commit history is what
      shows your criteria existed before your results did.
