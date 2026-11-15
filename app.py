@@ -8,6 +8,7 @@ FitFindr — command line.
     python app.py listings                browse the data  (Milestone 1)
     python app.py fields                  what fields a listing has
     python app.py examples                queries worth trying, including a dud
+    python app.py add                     add a new clothing item to the wardrobe
 
 Add --trace to any `ask` to print the loop step by step.
 
@@ -160,6 +161,9 @@ def cmd_ask(args):
     finally:
         print(generate.usage())
 
+def cmd_add(args):
+    print("Adding new item to wardrobe")
+    print("---------------------------")
 
 def build_parser():
     parser = argparse.ArgumentParser(
@@ -190,6 +194,9 @@ def build_parser():
         help="run as a user with nothing saved — one of unit 4's failure modes",
     )
     p_ask.set_defaults(func=cmd_ask)
+
+    p_ex = sub.add_parser("add", help="add a new clothing item to the wardrobe")
+    p_ex.set_defaults(func=cmd_add)
 
     return parser
 
