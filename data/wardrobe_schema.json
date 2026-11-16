@@ -202,6 +202,32 @@
           "pajama"
         ],
         "notes": null
+      },
+      {
+        "id": "w_014",
+        "name": "Flip-Flops",
+        "category": "shoes",
+        "colors": [
+          "red",
+          "black"
+        ],
+        "style_tags": [
+          "beach"
+        ],
+        "notes": null
+      },
+      {
+        "id": "w_015",
+        "name": "Jacket",
+        "category": "outerwear",
+        "colors": [
+          "navy blue"
+        ],
+        "style_tags": [
+          "basic",
+          "everyday"
+        ],
+        "notes": null
       }
     ]
   },

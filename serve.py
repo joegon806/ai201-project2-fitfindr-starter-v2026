@@ -26,18 +26,11 @@ It runs **one request at a time**, and one route is deliberately slower than a
 web server has to be. The reason is worth reading before you deploy: see the
 note above `_one_at_a_time` below — it also decides which gunicorn worker you
 can use.
-
-⚠️ There is deliberately NO logging, NO timing and NO request counting in this
-file. That is unit 9's follow-along: you instrument this yourself, first, and
-then deploy it. A structured log you were handed teaches you nothing about
-what belongs in one — and the timing field is the one everybody skips.
 """
 
 import os
 import sys
 import threading
-import json
-from datetime import datetime, timezone
 import time
 
 # config first, and before anything that talks to the model: it loads your .env
@@ -46,18 +39,12 @@ import config  # noqa: F401
 
 from flask import Flask, jsonify, request
 
+import generate
 from agent import run_agent
 from utils.data_loader import get_example_wardrobe
+from utils.run_log import log_run
 
 app = Flask(__name__)
-LOG_FILE = config.ROOT / "logs" / "runs.jsonl"
-def log_run(**fields):
-    entry = {"timestamp": datetime.now(timezone.utc).isoformat(timespec="seconds"), **fields}
-    line = json.dumps(entry, ensure_ascii=False)
-    LOG_FILE.parent.mkdir(exist_ok=True)
-    with LOG_FILE.open("a", encoding="utf-8") as f:
-        f.write(line + "\n")
-    print(line, flush=True)
 
 # ── one request at a time ─────────────────────────────────────────────────────
 # Here's why this exists.
@@ -121,7 +108,7 @@ def ask():
     query = (payload.get("query") or "").strip()
     if not query:
         # 400 rather than a stack trace: the caller can act on this one.
-        log_run(status="rejected", error="no query in the request body")
+        log_run(event="ask", status="rejected", error="no query in the request body")
         return jsonify({"error": "Send JSON with a 'query' field, e.g. "
                                  '{"query": "vintage graphic tee under $30"}'}), 400
 
@@ -150,24 +137,42 @@ def ask():
     failure = None
     session = None
     with _one_at_a_time:
+        # Cost of this one run = generate.py's session counters after, minus
+        # before. Safe only because the lock means no other run is adding to
+        # them meanwhile. Token counts are what Gemini reports per response;
+        # cached answers add nothing, so measure with AI201_CACHE=0.
+        tokens_before = generate.token_counts()
+        calls_before = generate.call_count()
         started = time.perf_counter()
         try:
             session = run_agent(query, wardrobe)
         except Exception as exc:  # noqa: BLE001 — a 500 with a sentence beats a hang
             failure = f"{type(exc).__name__}: {exc}"
         seconds = round(time.perf_counter() - started, 2)
+        tokens_after = generate.token_counts()
+        cost = {
+            "model_calls": generate.call_count() - calls_before,
+            "prompt_tokens": tokens_after["prompt"] - tokens_before["prompt"],
+            "output_tokens": tokens_after["output"] - tokens_before["output"],
+            "total_tokens": tokens_after["total"] - tokens_before["total"],
+            "cache_enabled": config.CACHE_ENABLED,
+        }
 
     # Outside the lock: building a response is not work the next caller should
     # be waiting on.
     if failure is not None:
-        log_run(status="crashed",
+        log_run(event="ask",
+                status="crashed",
                 query=query,
                 error=failure,
-                seconds=seconds)
+                seconds=seconds,
+                **cost)
         return jsonify({"error": failure}), 500
-    log_run(query=query, 
+    log_run(event="ask",
+            query=query,
             output=session["fit_card"] or session["error"],
-            seconds=seconds)
+            seconds=seconds,
+            **cost)
     return jsonify(session)
 
 

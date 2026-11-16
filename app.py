@@ -22,6 +22,7 @@ import argparse
 import sys
 import json
 import config
+from utils.run_log import log_run
 
 # Every query here except the last one has something real to find in
 # data/listings.json. If you add your own, check it against the data first — a
@@ -271,7 +272,11 @@ def cmd_add(args):
     with WARDROBE.open("w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
-    print(f"{clothing_item["name"]} has been added to the wardrobe.")
+    log_run(event="add",
+            item=clothing_item,
+            wardrobe_size=len(data["example_wardrobe"]["items"]))
+
+    print(f"{clothing_item['name']} has been added to the wardrobe.")
 
 def build_parser():
     parser = argparse.ArgumentParser(

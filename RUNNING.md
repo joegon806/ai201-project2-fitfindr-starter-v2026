@@ -4,6 +4,94 @@ Everything about how the starter works and how to use it.
 
 ---
 
+## What the environment needs
+
+**Python:** 3.11, 3.12, or 3.13. **Not 3.14** — several pinned packages don't
+support it yet. Tested on **Python 3.13.7** (Windows 11).
+
+**Dependencies** — pinned with lower and upper bounds in `requirements.txt`.
+Install using `pip install -r requirements.txt` inside a virtual environment:
+
+| Package | Pinned range | Version tested | Used for |
+|---|---|---|---|
+| `python-dotenv` | `>=1.0,<1.2` | 1.1.1 | Loads `GEMINI_API_KEY` from `.env` |
+| `google-genai` | `>=1.0,<2.0` | 1.75.0 | Calls the Gemini model |
+| `mcp` | `>=1.0,<2.0` | 1.30.0 | The MCP server/client tool call |
+| `flask` | `>=3.0,<4.0` | 3.1.3 | The HTTP server in `serve.py` |
+| `gunicorn` | `>=21.2,<24.0` | 23.0.0 | Host-style start command (not needed locally) |
+
+**Model files: none (0 bytes).** Nothing is downloaded or stored locally. The
+model, `gemini-3.5-flash-lite`, runs remotely and is called over the Gemini
+API. The only local data is `data/` (40 listings + the wardrobe JSON, ~28 KB).
+
+**Secrets and settings** — in a `.env` file at the repo root
+(`copy .env.example .env`, then paste your key):
+
+| Variable | Required? | What it does |
+|---|---|---|
+| `GEMINI_API_KEY` | **Yes** | Your Google AI Studio API key. Never committed — `.env` is in `.gitignore` |
+| `PORT` | No | Port `serve.py` listens on. Defaults to `5000` |
+| `AI201_MODEL` | No | Overrides the model. Defaults to `gemini-3.5-flash-lite` |
+| `AI201_CACHE` | No | Set to `0` to turn off the response cache. Defaults to on |
+| `AI201_DEBUG` | No | Set to `1` for Flask debug mode. Defaults to off |
+
+**Network:** internet access to the Gemini API is required for every query.
+
+---
+
+## Start it
+
+From a clean checkout, in order. Commands shown for **Windows (PowerShell)**;
+on macOS / Linux use `python3`, `source .venv/bin/activate`, and `cp`.
+
+```powershell
+git clone https://github.com/joegon806/ai201-project2-fitfindr-starter-v2026.git
+cd ai201-project2-fitfindr-starter-v2026
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+copy .env.example .env          # then paste your GEMINI_API_KEY into .env
+```
+
+**The start command:**
+
+```powershell
+python serve.py
+```
+
+It prints `FitFindr is listening on http://localhost:5000` and stays running
+until Ctrl-C. Every request is appended to `logs/runs.jsonl` and printed to
+the terminal as one JSON line.
+
+**Talk to it** from a second terminal (venv activated):
+
+```powershell
+# Is it awake?
+curl.exe http://localhost:5000/health
+
+# Ask the agent something
+curl.exe -X POST http://localhost:5000/ask -H "Content-Type: application/json" -d '{\"query\": \"vintage graphic tee under $30\"}'
+```
+
+> Use `curl.exe`, not `curl` — in Windows PowerShell 5.1, `curl` is an alias
+> for `Invoke-WebRequest` and takes different arguments.
+
+**Add a wardrobe item (the Unit 9 extension):**
+
+```powershell
+python app.py add
+```
+
+It prompts for name, category, colors, style tags, and notes, then saves the
+item to `data/wardrobe_schema.json`. The server reads that file on every
+request, so the new item is available to the next `/ask` without restarting
+`serve.py`.
+
+> Tested from a clean clone on **2026-11-16**, Windows 11, Python 3.13.7.
+> <!-- fill in the date after you actually run the steps above in a fresh folder -->
+
+---
+
 ## Before your first class
 
 Setup happens **before class**. The [environment setup page](../pages/ide_setup)
@@ -78,6 +166,7 @@ does nothing.
 | `python app.py examples` | Queries worth trying, including one that matches nothing |
 | `python app.py ask '...'` | Run the agent on one query — **single quotes** |
 | `python app.py ask` | Keep asking until you press Enter on an empty line |
+| `python app.py add` | Add a clothing item to the wardrobe, field by field — **unit 9 extension** |
 | `python agent.py` | Runs both example paths — one that matches, one that can't |
 | `python mcp_server.py` | Starts your MCP server — **unit 4** |
 | `python mcp_client.py` | Asks the server what it offers — **unit 4** |
@@ -140,6 +229,8 @@ On a host, the start command is:
 gunicorn serve:app
 ```
 
+
+
 | Thing | What it means |
 |---|---|
 | `PORT` | The host tells your app which port to listen on by setting this. Both `serve.py` and `gunicorn` read it, and `serve.py` falls back to `5000` on your machine. Don't hard-code a port |
@@ -148,10 +239,6 @@ gunicorn serve:app
 | It answers one request at a time | On purpose. A second request waits for the first to finish, and prints `[serve] another request is still running` while it waits. An MCP tool call starts a whole second Python process, and the free tier's 512 MB has no room for two of those at once — and `generate.py`'s rate-limit counting assumes one caller. The reasoning is written out in `serve.py` |
 | `gunicorn serve:app`, exactly | Not `-k gevent`, not `-k eventlet`, not wrapped for uvicorn. `mcp_client.call_tool` uses `asyncio.run()`, which won't start inside a running event loop, so an async worker breaks **every** MCP call — and only once you've deployed it |
 | The first request is slow | The free tier puts your app to sleep after about fifteen minutes of nothing. The next request wakes it up and waits for it — around a minute. Not a bug, and worth knowing before you demo it |
-
-`serve.py` ships with **no logging and no timing in it**, on purpose. You add
-that yourself in the follow-along, before you deploy — instrumenting first is
-the point of the session.
 
 ---
 
