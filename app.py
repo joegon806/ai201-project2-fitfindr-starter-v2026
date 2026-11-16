@@ -20,7 +20,7 @@ telling you why. Single quotes are literal in PowerShell, bash and zsh alike.
 
 import argparse
 import sys
-
+import json
 import config
 
 # Every query here except the last one has something real to find in
@@ -161,9 +161,117 @@ def cmd_ask(args):
     finally:
         print(generate.usage())
 
+WARDROBE = config.ROOT / "data" / "wardrobe_schema.json"
 def cmd_add(args):
     print("Adding new item to wardrobe")
     print("---------------------------")
+    
+     # Read the whole file into a Python dict
+    with WARDROBE.open("r", encoding="utf-8") as f:
+        data = json.load(f)
+    
+    example_wardrobe = data["example_wardrobe"]
+    items = example_wardrobe["items"]
+
+    # Get the id of the last entry and make the next id
+    id = "w_001"
+    if items:
+        last_id = items[-1]["id"]
+        id_number = int(last_id[2:]) + 1
+        id = "w_" + str(id_number).zfill(3)
+
+    # Prompt for fields
+    making_item = True
+    while making_item:
+        print("Enter the item's fields.")
+        print()
+
+        def nonempty_input(prompt: str = ""):
+            # inputs, but if the user enters only whitespace, input again
+            user_input = ""
+            while not user_input:
+                print(prompt, end="")
+                user_input = input().strip()
+                if not user_input:
+                    print("*** Invalid input; please enter a value.")
+            return user_input
+
+        name = nonempty_input("Item Name: ")
+        print()
+
+        # category MUST be one of the established categories
+        categories = ["tops", "bottoms", "shoes", "accessories", "outerwear"]
+        print("The item's category MUST be one of the following: " + ", ".join(categories))
+        categories = set(categories)
+        category = None
+        while not category:
+            catg_input = nonempty_input("Category: ").lower()
+
+            if catg_input not in categories:
+                print("*** not a valid category.")
+            else:
+                category = catg_input
+        print()
+
+        # Input multiple entries comma-separated
+        # also print out all the current colors in case the user wants to match them (match is not required)
+        # do this for colors and style_tags
+        def input_multiple(field_name: str):
+            print(f'{field_name.capitalize()}: Enter every value separated by a comma.')
+            
+            entries = set()
+            for item in items:
+                entries.update(item[field_name])
+            entries = sorted(entries)
+            print(f'(For reference, other {field_name}: {entries})')
+
+            entry_input = nonempty_input()
+            entries = [entry.strip() for entry in entry_input.split(",")]
+
+            print()
+            return entries
+
+        colors = input_multiple("colors")
+        style_tags = input_multiple("style_tags")
+
+        print("Any extra notes? (if not, keep blank and press Enter): ", end="")
+        notes = input().strip() or None
+        print()
+
+        clothing_item = {
+            "id": id,
+            "name": name,
+            "category": category,
+            "colors": colors,
+            "style_tags": style_tags,
+            "notes": notes
+            }
+        
+        for field, value in clothing_item.items():
+            if field != "id":
+                print(f'{field.capitalize()}: {value}')
+        print("---------------------------")
+
+        input_is_ok = 'x'
+        acceptable_responses = {"y", "n"}
+        while input_is_ok not in acceptable_responses:
+            print("Is this okay? (y/n): ", end="")
+            input_is_ok = input().strip().lower()
+
+            if input_is_ok not in acceptable_responses:
+                print("*** Invalid response")
+            else:
+                making_item = False if input_is_ok == 'y' else True
+        print()
+
+    # Append to the nested list
+    data["example_wardrobe"]["items"].append(clothing_item)
+
+    # Write the whole dict back, overwriting the file
+    with WARDROBE.open("w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+
+    print(f"{clothing_item["name"]} has been added to the wardrobe.")
 
 def build_parser():
     parser = argparse.ArgumentParser(
