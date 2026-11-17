@@ -228,6 +228,114 @@
           "everyday"
         ],
         "notes": null
+      },
+      {
+        "id": "w_016",
+        "name": "vintage butterfly print pants",
+        "category": "bottoms",
+        "colors": [
+          "white"
+        ],
+        "style_tags": [
+          "vintage"
+        ],
+        "notes": null
+      },
+      {
+        "id": "w_017",
+        "name": "Corduroy blue shirt",
+        "category": "tops",
+        "colors": [
+          "blue"
+        ],
+        "style_tags": [
+          "corduroy"
+        ],
+        "notes": null
+      },
+      {
+        "id": "w_018",
+        "name": "vintage Brown leather jacket",
+        "category": "outerwear",
+        "colors": [
+          "brown"
+        ],
+        "style_tags": [
+          "vintage"
+        ],
+        "notes": null
+      },
+      {
+        "id": "w_019",
+        "name": "vintage butterfly print pants",
+        "category": "bottoms",
+        "colors": [
+          "white"
+        ],
+        "style_tags": [
+          "vintage"
+        ],
+        "notes": null
+      },
+      {
+        "id": "w_020",
+        "name": "Corduroy blue shirt",
+        "category": "tops",
+        "colors": [
+          "blue"
+        ],
+        "style_tags": [
+          "corduroy"
+        ],
+        "notes": null
+      },
+      {
+        "id": "w_021",
+        "name": "vintage Brown leather jacket",
+        "category": "outerwear",
+        "colors": [
+          "brown"
+        ],
+        "style_tags": [
+          "vintage"
+        ],
+        "notes": null
+      },
+      {
+        "id": "w_022",
+        "name": "vintage butterfly print pants",
+        "category": "bottoms",
+        "colors": [
+          "white"
+        ],
+        "style_tags": [
+          "vintage"
+        ],
+        "notes": null
+      },
+      {
+        "id": "w_023",
+        "name": "Corduroy blue shirt",
+        "category": "tops",
+        "colors": [
+          "blue"
+        ],
+        "style_tags": [
+          "corduroy"
+        ],
+        "notes": null
+      },
+      {
+        "id": "w_024",
+        "name": "vintage Brown leather jacket",
+        "category": "outerwear",
+        "colors": [
+          "brown"
+        ],
+        "style_tags": [
+          "vintage"
+        ],
+        "notes": null
       }
     ]
   },

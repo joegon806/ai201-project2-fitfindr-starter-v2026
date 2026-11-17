@@ -594,3 +594,22 @@ seconds             13.20
 
 The file measure_cost.py reads the log results of 10 identical queries, and calculates and prints the averages of their costs.
 Model calls and token counts are reported by the Gemini API on each response, recorded per request by serve.py (counter after minus counter before), cache off, 10 runs of the same query, averaged with measure_cost.py. The number of seconds is recorded by serve.py directedly and logged.
+
+## Run Log
+
+| Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
+|---|---|---|---|---|---|
+| 1. Every add call adds item to wardrobe | 3 of 3 | 3/3 | 3/3 | 3/3 | MET |
+| 2. Every add call is logged | 3 of 3 | 3/3 | 3/3 | 3/3 | MET |
+| 3. Added items can appear in a fit | 3 of 3 | 1/3 | 0/3 | 0/3 | MISSED |
+| 4. Every 'Ask' error is logged | 3 of 3 | 3/3 | 3/3 | 3/3 | MET |
+| 5. Cached queries take 0 model calls | 3 of 3 | 3/3 | 3/3 | 3/3 | MET |
+
+### Real Log Outputs
+``` json
+{"timestamp": "2026-11-17T12:57:55+00:00", "event": "add", "item": {"id": "w_022", "name": "vintage butterfly print pants", "category": "bottoms", "colors": ["white"], "style_tags": ["vintage"], "notes": null}, "wardrobe_size": 22}
+{"timestamp": "2026-11-17T13:01:34+00:00", "event": "ask", "query": "vntage butterfly print", "output": "Found this precious little butterfly baby tee on Depop for just $18 and I am obsessed with the nostalgic Y2K energy! I'm already planning to style it down with some baggy dark wash denim and chunky sneakers for casual days, or edge it up with khaki trousers and combat boots. It's giving the ultimate 2000s indie-sleaze moment.", "seconds": 21.26, "model_calls": 2, "prompt_tokens": 1890, "output_tokens": 173, "total_tokens": 2063, "cache_enabled": true}
+{"timestamp": "2026-11-17T13:04:26+00:00", "event": "ask", "status": "rejected", "error": "no query in the request body"}
+{"timestamp": "2026-11-17T13:04:47+00:00", "event": "ask", "query": "track jacket", "output": "Score one of my absolute favorite streetwear finds on Poshmark for just $45! This vintage Champion 90s track jacket is so lightweight and easy to style—I'm already planning to wear it zipped up with baggy dark wash denim, or thrown open over a white ribbed tank and khaki trousers for that ultimate effortless athletic vibe.", "seconds": 16.24, "model_calls": 2, "prompt_tokens": 1897, "output_tokens": 180, "total_tokens": 2077, "cache_enabled": true}
+{"timestamp": "2026-11-17T13:04:57+00:00", "event": "ask", "query": "track jacket", "output": "Score one of my absolute favorite streetwear finds on Poshmark for just $45! This vintage Champion 90s track jacket is so lightweight and easy to style—I'm already planning to wear it zipped up with baggy dark wash denim, or thrown open over a white ribbed tank and khaki trousers for that ultimate effortless athletic vibe.", "seconds": 1.65, "model_calls": 0, "prompt_tokens": 0, "output_tokens": 0, "total_tokens": 0, "cache_enabled": true}
+```

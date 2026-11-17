@@ -161,7 +161,7 @@ The entered item is appended to wardrobe_schema.json["example_wardrobe"]["items"
 
 ## 3. Added items, particularly ones that match closely to a queried listing item, are able to appear in a fit.
 
-This criterion will be tested by adding a "vintage butterfly print pants" item to the wardrobe, and then querying for the "Y2K Baby Tee — Butterfly Print" item with the aim of seeing the added item in the listing item's fit.
+This criterion will be tested by adding a "vintage butterfly print pants" item to the wardrobe, and then querying for the "Y2K Baby Tee — Butterfly Print" item with the aim of seeing the added item in the listing item's fit. Two more test runs will be conducted by adding two other such items that are very similar to listing items.
 
 **Why this target:** The point of the add call is to expand the range of items that can appear in a fit. If an added item very clearly matches with a listing item and yet the added item is not included in the listing item's fit, then the added item is not added to the wardrobe the same way as the other wardrobe items and something is wrong with the system.
 
@@ -169,7 +169,7 @@ This criterion will be tested by adding a "vintage butterfly print pants" item t
 
 **Why this target:** Just like with Criterion 2, all failures should be logged, with their timestamps and information, for documentation purposes.
 
-## 5. Duplicate queries take 0 model calls.
+## 5. Cached queries take 0 model calls.
 
 When a query has been asked more than once with cache enabled, every run of that query except the first run takes 0 model calls.
 
