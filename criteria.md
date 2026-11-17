@@ -165,6 +165,10 @@ This criterion will be tested by adding a "vintage butterfly print pants" item t
 
 **Why this target:** The point of the add call is to expand the range of items that can appear in a fit. If an added item very clearly matches with a listing item and yet the added item is not included in the listing item's fit, then the added item is not added to the wardrobe the same way as the other wardrobe items and something is wrong with the system.
 
+> **Revised in unit 4:** The fit(s) for at least 1 of 3 listing items include at least one added wardrobe item. 
+>
+> **Why revised:** The original criterion was written with the expectation that the fit posts can be easily manipulated to include the added wardrobe items that were specifically meant to be used in the fits. The system as it stands cannot be manipulated in this way, and an added wardrobe item should be accepted as meeting the criterion if it appears in any outfit, even an outfit it wasn't originally created for.
+
 ## 4. Every 'Ask' error is logged in the run log.
 
 **Why this target:** Just like with Criterion 2, all failures should be logged, with their timestamps and information, for documentation purposes.

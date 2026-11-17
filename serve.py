@@ -170,6 +170,7 @@ def ask():
         return jsonify({"error": failure}), 500
     log_run(event="ask",
             query=query,
+            outfit=session["outfit_suggestion"],
             output=session["fit_card"] or session["error"],
             seconds=seconds,
             **cost)
