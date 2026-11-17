@@ -142,3 +142,35 @@ The system should not group an item into an outfit with which it has no matching
      A number you missed stays where it is, gets diagnosed, and gets a fix
      attempted. That's where the points are.
      ───────────────────────────────────────────────────────────────────────── -->
+
+# New Acceptance criteria — Unit 9
+
+Five criteria that say what "working" means for this agent with the new extension, written **before** running it.
+
+---
+
+## 1. Every add call successfully adds the entered item into the wardrobe.
+
+The entered item is appended to wardrobe_schema.json["example_wardrobe"]["items"].
+
+**Why this target:** This is the basic premise of the add function; the function must add the entered item into the wardrobe. It should happen with every add call because the input validation at each prompt ensures that each value is valid before appending.
+
+## 2. Every add call is logged in the run log.
+
+**Why this target:** Every add call, whether it succeeds or if it happens to fail, should log to the run log so the system developer(s) can refer to it for information about every add call.
+
+## 3. Added items, particularly ones that match closely to a queried listing item, are able to appear in a fit.
+
+This criterion will be tested by adding a "vintage butterfly print pants" item to the wardrobe, and then querying for the "Y2K Baby Tee — Butterfly Print" item with the aim of seeing the added item in the listing item's fit.
+
+**Why this target:** The point of the add call is to expand the range of items that can appear in a fit. If an added item very clearly matches with a listing item and yet the added item is not included in the listing item's fit, then the added item is not added to the wardrobe the same way as the other wardrobe items and something is wrong with the system.
+
+## 4. Every 'Ask' error is logged in the run log.
+
+**Why this target:** Just like with Criterion 2, all failures should be logged, with their timestamps and information, for documentation purposes.
+
+## 5. Duplicate queries take 0 model calls.
+
+When a query has been asked more than once with cache enabled, every run of that query except the first run takes 0 model calls.
+
+**Why this target:** The system is designed such that if a query is already in the cache when it is asked, then it will return the cached response without using any model calls, in order to save on model calls. Every duplicate query, excluding the query's first run, must consistently follow this design.
