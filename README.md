@@ -595,6 +595,15 @@ seconds             13.20
 The file measure_cost.py reads the log results of 10 identical queries, and calculates and prints the averages of their costs.
 Model calls and token counts are reported by the Gemini API on each response, recorded per request by serve.py (counter after minus counter before), cache off, 10 runs of the same query, averaged with measure_cost.py. The number of seconds is recorded by serve.py directedly and logged.
 
+Estimating that a signle user would use an average of 5 runs in a day, to run this model for a hundred people in a day would cost: (x 500)
+metric            average
+-------------------------
+total_tokens       765550
+prompt_tokens      684900
+output_tokens       80650
+model_calls          1000
+seconds              6600
+
 ## Run Log
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
@@ -644,3 +653,20 @@ Criterion 3 ("Added items can appear in a fit") missed, best seen in the "vintag
 {"timestamp": "2026-11-17T14:12:44+00:00", "event": "ask", "query": "track jacket", "outfit": "### Outfit 1\n* **Top:** White ribbed tank top\n* **Bottom:** Baggy straight-leg jeans, dark wash\n* **Shoes:** Chunky white sneakers\n* **Outerwear:** 90s Track Jacket — Navy/White Stripe\n* **Accessories:** Black crossbody bag\n\n### Outfit 2\n* **Top:** Licensed Tee\n* **Bottom:** Wide-leg khaki trousers\n* **Shoes:** Chunky white sneakers\n* **Outerwear:** 90s Track Jacket — Navy/White Stripe\n* **Accessories:** Brown leather belt", "output": "Scored this vintage Champion 90s track jacket on Poshmark for just $45, and it’s about to be my entire personality for fall layering. I'm already planning to throw it on over a white ribbed tank with baggy dark wash denim and chunky sneaks for that effortless streetwear vibe. Such a good retro find!", "seconds": 17.43, "model_calls": 2, "prompt_tokens": 1632, "output_tokens": 187, "total_tokens": 1819, "cache_enabled": true}
 {"timestamp": "2026-11-17T14:13:30+00:00", "event": "ask", "query": "track jacket", "outfit": "### Outfit 1\n* **Top:** White ribbed tank top\n* **Bottom:** Baggy straight-leg jeans, dark wash\n* **Shoes:** Chunky white sneakers\n* **Outerwear:** 90s Track Jacket — Navy/White Stripe\n* **Accessories:** Black crossbody bag\n\n### Outfit 2\n* **Top:** Licensed Tee\n* **Bottom:** Wide-leg khaki trousers\n* **Shoes:** Chunky white sneakers\n* **Outerwear:** 90s Track Jacket — Navy/White Stripe\n* **Accessories:** Brown leather belt", "output": "Scored this vintage Champion 90s track jacket on Poshmark for just $45, and it’s about to be my entire personality for fall layering. I'm already planning to throw it on over a white ribbed tank with baggy dark wash denim and chunky sneaks for that effortless streetwear vibe. Such a good retro find!", "seconds": 3.58, "model_calls": 0, "prompt_tokens": 0, "output_tokens": 0, "total_tokens": 0, "cache_enabled": true}
 ```
+
+## What's Still Broken
+<!-- For each criterion still missed: what you'd do, and why you stopped. "I ran out of time" is fine if it's true. If you met all five, this section still isn't empty: say which target was set too low and what you'd tighten it to. -->
+None of the criteria missed, but admittedly the criteria were pretty easy to meet because they were either testing basic implemented functionality, or in the case of criterion 3, was made lenient to fit with what it was testing. If I could, I would tighten criterion 3 to be more along the lines of "Among 5 outfits, every added item appears in at least one outfit" so that every added item can be proven to be usable in outfits, and as such this new criterion would require 5 test outfits for every added item. 
+I would also say the add call can be improved from how I initially implemented it, by adding some sort of mechanism to prevent the user from adding an item that already exists in the wardrobe. I did not implement this in the initial writing of the function because I personally deemed it out of scope to design how it would be implemented (check for duplicate names only? or check if all of the item's info is the same as another item?), and that I would have little time to work on it because this project has the work of two projects in one unit.
+
+Due to the larger amount of work for this project, I ended up relying on AI more heavily than usual to explain concepts and write code for me. If this project were real and had another unit, I would take more time to do the work on my own without relying as much on AI, to put more human care and attention into the work.
+
+## How I Used AI
+I asked Claude Code for:
+- how to append a clothing_item to the example_wardrobe / items section of the wardrobe json
+- how to deal with SortedSet from collections failing to import
+- an explanation of the RUNNING.md requirements and help in drafting it
+- how to make the add function log to the log file
+- an explanation of how to Measure the Cost for the system and help in writing its section
+- an explanation of why added items that are similar to listing items don't get added to outfit posts for those listing items
+- the addition of the generated outfit suggestion(s) to an Ask call's log
